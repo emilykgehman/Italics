@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Italics.95dea368-d3b4-4720-83fb-4b26118ec4da" Version="1.0" Language="en-US" Publisher="Emily Gehman" />
+        <Identity Id="Italics.95dea368-d3b4-4720-83fb-4b26118ec4da" Version="1.0" Language="en-US" Publisher="Emily K. Gehman" />
         <DisplayName>Italics</DisplayName>
-        <Description xml:space="preserve">Italicize text in visual studio</Description>
+        <Description xml:space="preserve">Italicize text in Visual Studio</Description>
+        <MoreInfo>https://github.com/emilykgehman/Italics</MoreInfo>
         <Icon>Italics.png</Icon>
         <PreviewImage>Italics.png</PreviewImage>
         <Tags>Italics</Tags>
