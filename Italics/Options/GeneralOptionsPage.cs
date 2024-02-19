@@ -14,7 +14,7 @@ namespace Italics.Options
         /// </summary>
         /// <seealso cref="Microsoft.VisualStudio.Text.Classification.IClassificationType.Classifcation"/>
         [Category("General")]
-        [DisplayName("Classification Types")]
+        [DisplayName("Classification types")]
         [Description("The names of classification types to italicize. " +
                      "Identifiers must be recognizable by IClassificationTypeService. " +
                      "Do not enclose identifiers in quotes.")]

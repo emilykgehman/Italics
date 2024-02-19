@@ -65,7 +65,7 @@ namespace Italics
             {
                 if (_settingsStore.CollectionExists(CollectionPath)) // Load saved settings
                 {
-                    UpdateClassificationTypes(_settingsStore.GetPropertyNamesAndValues(CollectionPath).Select(nvp => nvp.Key));
+                    UpdateClassificationTypes(_settingsStore.GetPropertyNames(CollectionPath));
                 }
             }
             catch (Exception e)
