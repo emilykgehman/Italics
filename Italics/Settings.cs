@@ -38,6 +38,8 @@ namespace Italics
 
         public ImmutableHashSet<string> ClassificationTypes { get; private set; } = ImmutableHashSet<string>.Empty;
 
+        public event EventHandler RaiseAfterSettingsSaved;
+
         private static volatile Settings _instance;
         private static readonly object SyncLock = new object();
         private readonly WritableSettingsStore _settingsStore;
@@ -91,6 +93,7 @@ namespace Italics
                 }
 
                 _settingsStore.SetString(KEY, VALUE, RawClassificationTypes);
+                RaiseAfterSettingsSaved(this, EventArgs.Empty);
             }
             catch (Exception e)
             {

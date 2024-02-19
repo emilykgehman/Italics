@@ -15,9 +15,6 @@ namespace Italics
         [Import] 
         private IClassificationFormatMapService _formatMapService;
 
-        [Import] 
-        private IClassificationTypeRegistryService _registryService;
-
 #pragma warning restore CS0649, IDE0044
 
         public void TextViewCreated(IWpfTextView textView)
@@ -27,7 +24,7 @@ namespace Italics
 
         public ItalicsViewDecorator CreateDecorator(IWpfTextView textView)
         {
-            return ItalicsViewDecorator.Create(textView, _registryService, _formatMapService.GetClassificationFormatMap(textView));
+            return ItalicsViewDecorator.Create(textView, _formatMapService.GetClassificationFormatMap(textView));
         }
     }
 }
