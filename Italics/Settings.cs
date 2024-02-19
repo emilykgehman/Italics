@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
@@ -12,23 +13,27 @@ namespace Italics
     {
         private const string KEY = "Italics";
         private const string VALUE = "ClassificationTypes";
+        private readonly string CollectionPath = $"{KEY}\\{VALUE}";
 
-        private string _rawClassificationTypes;
+        private IEnumerable<string> _rawClassificationTypes;
+        private static volatile Settings _instance;
+        private static readonly object SyncLock = new object();
+        private readonly WritableSettingsStore _settingsStore;
 
-        public string RawClassificationTypes
+        public IEnumerable<string> RawClassificationTypes
         {
-            get => _rawClassificationTypes ?? string.Empty;
+            get => _rawClassificationTypes ?? Enumerable.Empty<string>();
 
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (value == null)
                 {
                     ClassificationTypes = ImmutableHashSet<string>.Empty;
                 }
                 else
                 {
                     ClassificationTypes = value
-                        .Split(',')
+                        .Where(v => !string.IsNullOrWhiteSpace(v))
                         .Select(t => t.Trim())
                         .ToImmutableHashSet();
                 }
@@ -39,10 +44,6 @@ namespace Italics
         public ImmutableHashSet<string> ClassificationTypes { get; private set; } = ImmutableHashSet<string>.Empty;
 
         public event EventHandler RaiseAfterSettingsSaved;
-
-        private static volatile Settings _instance;
-        private static readonly object SyncLock = new object();
-        private readonly WritableSettingsStore _settingsStore;
 
         public static Settings Instance
         {
@@ -69,12 +70,9 @@ namespace Italics
 
             try
             {
-                if (_settingsStore.CollectionExists(KEY))
+                if (_settingsStore.CollectionExists(CollectionPath))
                 {
-                    if (_settingsStore.PropertyExists(KEY, VALUE))
-                    {
-                        RawClassificationTypes = _settingsStore.GetString(KEY, VALUE);
-                    }
+                    RawClassificationTypes = _settingsStore.GetPropertyNamesAndValues(CollectionPath).Select(nvp => nvp.Key);
                 }
             }
             catch (Exception e)
@@ -87,12 +85,14 @@ namespace Italics
         {
             try
             {
-                if (!_settingsStore.CollectionExists(KEY))
-                {
-                    _settingsStore.CreateCollection(KEY);
-                }
+                // Reset settings
+                _settingsStore.DeleteCollection(CollectionPath);
+                _settingsStore.CreateCollection(CollectionPath);
 
-                _settingsStore.SetString(KEY, VALUE, RawClassificationTypes);
+                foreach (string type in ClassificationTypes)
+                {
+                    _settingsStore.SetBoolean(CollectionPath, type, true);
+                }
                 RaiseAfterSettingsSaved(this, EventArgs.Empty);
             }
             catch (Exception e)

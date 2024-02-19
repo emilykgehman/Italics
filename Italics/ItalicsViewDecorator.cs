@@ -35,7 +35,7 @@ namespace Italics
 
         private void TextViewGotAggregateFocus(object sender, EventArgs e)
         {
-            if (_needsUpdate)
+            if (_needsUpdate) // Apply Italics settings updates on focus
             {
                 lock (UpdateLock)
                 {
@@ -45,6 +45,10 @@ namespace Italics
             }
         }
 
+        /// <summary>
+        /// Italicizes all of the text in the current <see cref="ITextView"/> whose <see cref="IClassificationType"/>
+        /// is specified in <see cref="Settings.ClassificationTypes"/>.
+        /// </summary>
         private void Decorate()
         {
             if (!_isDecorating)
