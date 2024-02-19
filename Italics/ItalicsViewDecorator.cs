@@ -7,6 +7,10 @@ using Microsoft.VisualStudio.Text.Formatting;
 
 namespace Italics
 {
+    /// <summary>
+    /// Italicizes the text within a <see cref="ITextView"/> based on the
+    /// classification types defined in <see cref="Settings.ClassificationTypes"/>.
+    /// </summary>
     internal sealed class ItalicsViewDecorator
     {
         private bool _isDecorating;
@@ -14,18 +18,30 @@ namespace Italics
         private readonly object UpdateLock = new object();
         private readonly IClassificationFormatMap _formatMap;
 
+        /// <summary>
+        /// Gets or creates a singleton instance of this class for the given <see cref="ITextView"/>
+        /// and its assocaiated <see cref="IClassificationFormatMap"/>.
+        /// </summary>
+        /// <inheritdoc cref="ItalicsViewDecorator.ItalicsViewDecorator" path="/param"/>
+        /// <returns>The existing singleton instance of this class for <paramref name="view"/>, or a new one if one does not exist.</returns>
         public static ItalicsViewDecorator Create(ITextView view, IClassificationFormatMap map)
         {
             return view.Properties.GetOrCreateSingletonProperty(() => new ItalicsViewDecorator(view, map));
         }
 
+        /// <summary>
+        /// Initializes a new instance of this class for the given <see cref="ITextView"/>
+        /// and its assocaiated <see cref="IClassificationFormatMap"/>.
+        /// </summary>
+        /// <param name="view">The <see cref="ITextView"/> whose text should be italicized.</param>
+        /// <param name="map">The <see cref="IClassificationFormatMap"/> for <paramref name="view"/>.</param>
         public ItalicsViewDecorator(ITextView view, IClassificationFormatMap map)
         {
             Settings.Instance.RaiseAfterSettingsSaved += (sender, e) =>
             {
                 lock (UpdateLock)
                 {
-                    _needsUpdate = _needsUpdate = true;
+                    _needsUpdate = true;
                 }
             };
             view.GotAggregateFocus += TextViewGotAggregateFocus;
@@ -33,6 +49,13 @@ namespace Italics
             Decorate();
         }
 
+        /// <summary>
+        /// Handles updating the <see cref="ITextView"/> when <see cref="ITextView.GotAggregateFocus"/>
+        /// is raised. If <see cref="Settings.ClassificationTypes"/> has changed since
+        /// the last time this view was decorated, the view will be re-decorated for italics.
+        /// If no changes have been made to <see cref="Settings.ClassificationTypes"/>, nothing will happen.
+        /// </summary>
+        /// <inheritdoc cref="EventHandler" path="/param"/>
         private void TextViewGotAggregateFocus(object sender, EventArgs e)
         {
             if (_needsUpdate) // Apply Italics settings updates on focus

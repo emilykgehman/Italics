@@ -9,42 +9,22 @@ using Microsoft.VisualStudio.Shell.Settings;
 
 namespace Italics
 {
+    /// <summary>
+    /// Manages the settings to apply for the Italics extension.
+    /// </summary>
     public class Settings
     {
-        private const string KEY = "Italics";
-        private const string VALUE = "ClassificationTypes";
-        private readonly string CollectionPath = $"{KEY}\\{VALUE}";
+        private const string ItalicsCollection = "Italics";
+        private const string ClassificationTypesCollection = "ClassificationTypes";
+        private readonly string CollectionPath = $"{ItalicsCollection}\\{ClassificationTypesCollection}";
 
-        private IEnumerable<string> _rawClassificationTypes;
         private static volatile Settings _instance;
         private static readonly object SyncLock = new object();
         private readonly WritableSettingsStore _settingsStore;
 
-        public IEnumerable<string> RawClassificationTypes
-        {
-            get => _rawClassificationTypes ?? Enumerable.Empty<string>();
-
-            set
-            {
-                if (value == null)
-                {
-                    ClassificationTypes = ImmutableHashSet<string>.Empty;
-                }
-                else
-                {
-                    ClassificationTypes = value
-                        .Where(v => !string.IsNullOrWhiteSpace(v))
-                        .Select(t => t.Trim())
-                        .ToImmutableHashSet();
-                }
-                _rawClassificationTypes = value;
-            }
-        }
-
-        public ImmutableHashSet<string> ClassificationTypes { get; private set; } = ImmutableHashSet<string>.Empty;
-
-        public event EventHandler RaiseAfterSettingsSaved;
-
+        /// <summary>
+        /// The singleton instance of the Italics extension <see cref="Settings"/>.
+        /// </summary>
         public static Settings Instance
         {
             get
@@ -63,6 +43,19 @@ namespace Italics
             }
         }
 
+        /// <summary>
+        /// The names of the classification types to italicize.
+        /// </summary>
+        public ImmutableHashSet<string> ClassificationTypes { get; private set; } = ImmutableHashSet<string>.Empty;
+
+        /// <summary>
+        /// Event raised after settings are successfully saved
+        /// </summary>
+        public event EventHandler RaiseAfterSettingsSaved;
+
+        /// <summary>
+        /// Initializes an instance of this class using a settings store scoped to <see cref="SettingsScope.UserSettings"/>.
+        /// </summary>
         private Settings()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -70,9 +63,9 @@ namespace Italics
 
             try
             {
-                if (_settingsStore.CollectionExists(CollectionPath))
+                if (_settingsStore.CollectionExists(CollectionPath)) // Load saved settings
                 {
-                    RawClassificationTypes = _settingsStore.GetPropertyNamesAndValues(CollectionPath).Select(nvp => nvp.Key);
+                    UpdateClassificationTypes(_settingsStore.GetPropertyNamesAndValues(CollectionPath).Select(nvp => nvp.Key));
                 }
             }
             catch (Exception e)
@@ -81,6 +74,9 @@ namespace Italics
             }
         }
 
+        /// <summary>
+        /// Saves all settings directly-related to the Italics extension.
+        /// </summary>
         public void SaveSettings()
         {
             try
@@ -89,16 +85,31 @@ namespace Italics
                 _settingsStore.DeleteCollection(CollectionPath);
                 _settingsStore.CreateCollection(CollectionPath);
 
-                foreach (string type in ClassificationTypes)
+                foreach (string classification in ClassificationTypes)
                 {
-                    _settingsStore.SetBoolean(CollectionPath, type, true);
+                    _settingsStore.SetBoolean(CollectionPath, classification, true);
                 }
+
                 RaiseAfterSettingsSaved(this, EventArgs.Empty);
             }
             catch (Exception e)
             {
                 Debug.Fail(e.Message);
             }
+        }
+
+        /// <summary>
+        /// Overwrites any existing classification types to italicize with
+        /// the given classification types. The updated collection is accessible
+        /// through the <see cref="ClassificationTypes"/> property.
+        /// </summary>
+        /// <param name="classificationTypes">The names of classification types to italicize.</param>
+        public void UpdateClassificationTypes(IEnumerable<string> classificationTypes)
+        {
+            ClassificationTypes = classificationTypes?
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .Select(t => t.Trim())
+                .ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
         }
     }
 }

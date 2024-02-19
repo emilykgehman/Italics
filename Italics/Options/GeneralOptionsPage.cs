@@ -1,14 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using EnvDTE;
-using System.Text.RegularExpressions;
-using System.Windows.Input;
+﻿using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Text.Tagging;
-using Newtonsoft.Json.Linq;
-using static System.Collections.Specialized.BitVector32;
-using static System.Net.Mime.MediaTypeNames;
-using VSLangProj;
 
 namespace Italics.Options
 {
@@ -18,23 +9,26 @@ namespace Italics.Options
     public class GeneralOptionsPage : DialogPage
     {
         /// <summary>
-        /// A comma-separated list of classification types to italicize.
+        /// The classification types to italicize.
         /// </summary>
-        /// <seealso cref="Microsoft.VisualStudio.Text.Classification.IClassificationType"/>
-        [Category("Italics")]
+        /// <seealso cref="Microsoft.VisualStudio.Text.Classification.IClassificationType.Classifcation"/>
+        [Category("General")]
         [DisplayName("Classification Types")]
-        [Description("Comma-separated list of classification types to italicize. " +
+        [Description("The names of classification types to italicize. " +
                      "Identifiers must be recognizable by IClassificationTypeService. " +
                      "Do not enclose identifiers in quotes.")]
         [TypeConverter(typeof(ArrayConverter))]
         public string[] ClassificationTypes { get; set; }
 
-        /// <inheritdoc />
-        protected override void OnClosed(EventArgs e)
+        /// <summary>
+        /// Handles <c>Apply</c> messages from the Visual Studio environment.
+        /// </summary>
+        /// <param name="e">Event arguments to indicate how to handle the apply event.</param>
+        protected override void OnApply(PageApplyEventArgs e)
         {
-            Settings.Instance.RawClassificationTypes = ClassificationTypes;
+            Settings.Instance.UpdateClassificationTypes(ClassificationTypes);
             Settings.Instance.SaveSettings();
-            base.OnClosed(e);
+            base.OnApply(e);
         }
     }
 }
