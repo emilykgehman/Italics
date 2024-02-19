@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Web.UI.WebControls;
 using Microsoft.VisualStudio.Shell;
 
 namespace Italics.Options
@@ -17,7 +18,7 @@ namespace Italics.Options
         [Description("The names of classification types to italicize. " +
                      "Identifiers must be recognizable by IClassificationTypeService. " +
                      "Do not enclose identifiers in quotes.")]
-        [TypeConverter(typeof(ArrayConverter))]
+        [TypeConverter(typeof(StringArrayConverter))]
         public string[] ClassificationTypes { get; set; }
 
         /// <summary>
