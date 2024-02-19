@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Formatting;
 
 namespace Italics
 {
@@ -43,6 +44,7 @@ namespace Italics
             try
             {
                 _isDecorating = true;
+                _formatMap.BeginBatchUpdate();
 
                 foreach (IClassificationType classificationType in _formatMap.CurrentPriorityOrder
                     .Where(ct => ct != null)
@@ -63,6 +65,7 @@ namespace Italics
             }
             finally
             {
+                _formatMap.EndBatchUpdate();
                 _isDecorating = false;
             }
         }
