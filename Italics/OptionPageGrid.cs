@@ -15,7 +15,7 @@ namespace Italics
 
         protected override void OnClosed(EventArgs e)
         {
-            Settings.Instance.ClassificationTypes = ClassificationTypes;
+            Settings.Instance.RawClassificationTypes = ClassificationTypes;
             Settings.Instance.SaveSettings();
             base.OnClosed(e);
         }

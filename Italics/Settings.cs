@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Settings;
@@ -11,7 +13,30 @@ namespace Italics
         private const string KEY = "Italics";
         private const string VALUE = "ClassificationTypes";
 
-        public string ClassificationTypes { get; set; } = string.Empty;
+        private string _rawClassificationTypes;
+
+        public string RawClassificationTypes
+        {
+            get => _rawClassificationTypes ?? string.Empty;
+
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    ClassificationTypes = ImmutableHashSet<string>.Empty;
+                }
+                else
+                {
+                    ClassificationTypes = value
+                        .Split(',')
+                        .Select(t => t.Trim())
+                        .ToImmutableHashSet();
+                }
+                _rawClassificationTypes = value;
+            }
+        }
+
+        public ImmutableHashSet<string> ClassificationTypes { get; private set; } = ImmutableHashSet<string>.Empty;
 
         private static volatile Settings _instance;
         private static readonly object SyncLock = new object();
@@ -46,7 +71,7 @@ namespace Italics
                 {
                     if (_settingsStore.PropertyExists(KEY, VALUE))
                     {
-                        ClassificationTypes = _settingsStore.GetString(KEY, VALUE);
+                        RawClassificationTypes = _settingsStore.GetString(KEY, VALUE);
                     }
                 }
             }
@@ -65,7 +90,7 @@ namespace Italics
                     _settingsStore.CreateCollection(KEY);
                 }
 
-                _settingsStore.SetString(KEY, VALUE, ClassificationTypes);
+                _settingsStore.SetString(KEY, VALUE, RawClassificationTypes);
             }
             catch (Exception e)
             {

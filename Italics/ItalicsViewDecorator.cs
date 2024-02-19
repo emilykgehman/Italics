@@ -44,34 +44,17 @@ namespace Italics
             {
                 _isDecorating = true;
 
-                var classificationTypes = Settings.Instance.ClassificationTypes
-                    .Split(',')
-                    .Select(x => _registryService.GetClassificationType(x.Trim()))
-                    .Where(x => x != null)
-                    .ToList();
-
-                foreach (var classificationType in _formatMap.CurrentPriorityOrder)
+                foreach (IClassificationType classificationType in _formatMap.CurrentPriorityOrder
+                    .Where(ct => ct != null)
+                    .Where(ct => Settings.Instance.ClassificationTypes.Contains(ct.Classification)))
                 {
-                    if (classificationType == null) continue;
+                    TextFormattingRunProperties properties = _formatMap.GetTextProperties(classificationType);
 
-                    var properties = _formatMap.GetTextProperties(classificationType);
-
-                    if (classificationTypes.Contains(classificationType))
+                    if (!properties.Italic)
                     {
-                        if (!properties.Italic)
-                        {
-                            properties = properties.SetItalic(true);
-                        }
+                        properties = properties.SetItalic(true);
+                        _formatMap.SetTextProperties(classificationType, properties);
                     }
-                    else
-                    {
-                        if (properties.Italic)
-                        {
-                            properties = properties.SetItalic(false);
-                        }
-                    }
-
-                    _formatMap.SetTextProperties(classificationType, properties);
                 }
             }
             catch (Exception e)
