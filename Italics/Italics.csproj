@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="ItalicsViewCreationListener.cs" />
     <Compile Include="ItalicsViewDecorator.cs" />
-    <Compile Include="OptionPageGrid.cs">
+    <Compile Include="Options\GeneralOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,10 +63,16 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.1.4057" />
+    <!-- As of February 19, 2024, Microsoft.VisualStudio.SDK version 17.6.36389 (May 16, 2023) is the latest version
+         compatible with this extension. Newer versions of the package throw errors on file load or tool options view.
+    -->
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.6.36389" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.9.3168" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Italics.png">

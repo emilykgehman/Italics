@@ -26,7 +26,8 @@ namespace Italics
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(ItalicsPackage.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideOptionPage(typeof(OptionPageGrid), "Italics", "Italics", 0, 0, true)]
+    [ProvideOptionPage(typeof(Options.GeneralOptionsPage), "Italics", "General", 0, 0, true)]
+    [ProvideProfile(typeof(Options.GeneralOptionsPage), "Italics", "General", 0, 0, true)]
     public sealed class ItalicsPackage : AsyncPackage
     {
         /// <summary>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Italics.95dea368-d3b4-4720-83fb-4b26118ec4da" Version="1.0" Language="en-US" Publisher="Emily K. Gehman" />
+        <Identity Id="Italics.95dea368-d3b4-4720-83fb-4b26118ec4da" Version="1.1" Language="en-US" Publisher="Emily K. Gehman" />
         <DisplayName>Italics</DisplayName>
         <Description xml:space="preserve">Italicize text in Visual Studio</Description>
         <MoreInfo>https://github.com/emilykgehman/Italics</MoreInfo>
@@ -11,6 +11,12 @@
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Pro">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Enterprise">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
     </Installation>
