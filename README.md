@@ -5,15 +5,47 @@ This is a Visual Studio extension that allows you to use italics in the text edi
 ## Usage
 
 - Install the VSIX and open Visual Studio 2022
-- Open Tools -> Options -> Italics -> Italics
-- In the "Classification Types" field enter a comma-separated list of the text classification types you want to italicize
-    - Put all of the identifiers on one line
-    - Do not enclose the identifiers in quotes
-    - Spaces between identifiers are ok
+- Open Tools -> Options -> Italics -> General
+- In the "Classification types" field enter the text classification types you want to italicize
+    - Input as list
+        - Click the "..." button on the right side of the text field 
+        - List the name of each classification type, one per line
+    - Input as comma-separated values
+        - List all the identifiers on one line
+        - Do not enclose the identifiers in quotes
+        - Spaces between identifiers are ok
 - Click OK
 - Open a file and you should see italics!
 
 ## Example Settings Value
+
+### As line-separated values
+
+```
+comment
+CSS Comment
+CSS Keyword
+HTML Comment
+keyword
+keyword - control
+preprocessor keyword
+preprocessor text
+regex - comment
+XML Doc Comment
+xml doc comment - attribute name
+xml doc comment - attribute quotes
+xml doc comment - attribute value
+xml doc comment - cdata section
+xml doc comment - comment
+xml doc comment - delimiter
+xml doc comment - entity reference
+xml doc comment - name
+xml doc comment - processing instruction
+xml doc comment - text
+XML Doc Tag
+```
+
+### As comma-separated values
 
 ```
 comment,CSS Comment,CSS Keyword,HTML Comment,keyword,keyword - control,preprocessor keyword,preprocessor text,regex - comment,XML Doc Comment,xml doc comment - attribute name,xml doc comment - attribute quotes,xml doc comment - attribute value,xml doc comment - cdata section,xml doc comment - comment,xml doc comment - delimiter,xml doc comment - entity reference,xml doc comment - name,xml doc comment - processing instruction,xml doc comment - text,XML Doc Tag
